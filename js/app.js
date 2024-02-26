@@ -31,6 +31,7 @@ class CalorieTracker {
   removeMeals (mealId) {
       this._meals = this._meals.filter((meal) => meal.id !== mealId)
       this._calorieTotal = this._meals.reduce((total, meal) => total + +meal.calories, 0) - this._workouts.reduce((total, workout) => total + +workout.calories, 0);
+      this._displayCaloriesProgress();
       this._render();
       
   }
@@ -38,6 +39,7 @@ class CalorieTracker {
   removeWorkouts (workoutId) {
       this._workouts = this._workouts.filter((workout) => workout.id !== workoutId)
       this._calorieTotal = this._meals.reduce((total, meal) => total + +meal.calories, 0) - this._workouts.reduce((total, workout) => total + +workout.calories, 0);
+      this._displayCaloriesProgress();
       this._render();
       
   }
@@ -79,7 +81,12 @@ class CalorieTracker {
           caloriesProgress.classList.add("bg-danger");
           remainingCalories.parentElement.classList.remove("bg-light");
           remainingCalories.parentElement.classList.add("bg-danger");
+          caloriesProgress.style.width = `${Math.min(progress, 100)}%`;
           
+      }
+      else if (progress < 0) {
+        caloriesProgress.style.width = 0;
+
       }
       else {
           caloriesProgress.classList.remove("bg-danger");
@@ -87,8 +94,8 @@ class CalorieTracker {
           remainingCalories.parentElement.classList.remove("bg-danger");
           remainingCalories.parentElement.classList.add("bg-light");
 
+          caloriesProgress.style.width = `${Math.min(progress, 100)}%`;
       }
-      caloriesProgress.style.width = `${Math.min(progress, 100)}%`;
   }
 
   _displayNewMeal (meal) {
@@ -277,9 +284,9 @@ class Storage {
 
 class App {
     constructor () {
-        // const limitCalories = document.querySelector('#calories-limit');
+        const limitCalories = document.querySelector('#calories-limit');
         this._tracker = new CalorieTracker();
-        // limitCalories.innerHTML = this._tracker._calorieLimit;
+        limitCalories.innerHTML = this._tracker._calorieLimit;
         document.querySelector('#meal-form').addEventListener('submit', this._newMeal.bind(this._tracker));
         document.querySelector('#workout-form').addEventListener('submit', this._newWorkout.bind(this._tracker));
         document.querySelector('#meal-items').addEventListener('click', this._removeMeal.bind(this._tracker));

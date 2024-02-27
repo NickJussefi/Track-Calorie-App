@@ -7,9 +7,9 @@ class CalorieTracker {
   }
 
   setLimit(limit) {
-    console.log(limit);
+    // console.log(limit);
     this._calorieLimit = limit;
-    Storage.setCalorieLimit(limit);
+    localStorage.setItem('limit' ,limit);
     this._render();
       
   }
@@ -188,21 +188,21 @@ class Workout {
 
 
 class Storage {
-    static getCalorieLimit(defaultLimit = 2000) {
-      let calorieLimit;
-      if (localStorage.getItem('calorieLimit') === null) {
-        calorieLimit = defaultLimit;
-      }
-      else {
-        calorieLimit = +localStorage.getItem('calorieLimit');
-        console.log("gET");
-      }
-      return calorieLimit;
-    }
+    // static getCalorieLimit(defaultLimit = 2000) {
+    //   let calorieLimit;
+    //   if (localStorage.getItem('calorieLimit') === null) {
+    //     calorieLimit = defaultLimit;
+    //   }
+    //   else {
+    //     calorieLimit = +localStorage.getItem('calorieLimit');
+    //     console.log("gET");
+    //   }
+    //   return calorieLimit;
+    // }
   
-    static setCalorieLimit(calorieLimit) {
-      localStorage.setItem('calorieLimit', calorieLimit);
-    }
+    // static setCalorieLimit(calorieLimit) {
+    //   localStorage.setItem('calorieLimit', calorieLimit);
+    // }
   
     static getTotalCalories(defaultCalories = 0) {
       let totalCalories;
@@ -285,8 +285,9 @@ class Storage {
 class App {
     constructor () {
         const limitCalories = document.querySelector('#calories-limit');
+        limitCalories.innerHTML = localStorage.getItem('limit');
+        
         this._tracker = new CalorieTracker();
-        limitCalories.innerHTML = this._tracker._calorieLimit;
         document.querySelector('#meal-form').addEventListener('submit', this._newMeal.bind(this._tracker));
         document.querySelector('#workout-form').addEventListener('submit', this._newWorkout.bind(this._tracker));
         document.querySelector('#meal-items').addEventListener('click', this._removeMeal.bind(this._tracker));
